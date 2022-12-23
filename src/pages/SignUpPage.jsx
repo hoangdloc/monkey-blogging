@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
+import { Button } from '../components/button';
 import { Field } from '../components/field';
 import { IconEyeClose, IconEyeOpen } from '../components/icon';
 import { Input } from '../components/input';
@@ -33,10 +34,16 @@ const SignUpPage = () => {
     handleSubmit,
     formState: { errors, isValid, isSubmitting },
     watch,
-  } = useForm({});
+    reset,
+  } = useForm({ mode: "onChange" });
 
   const handleSignUp = (values) => {
-    console.log(values);
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+        console.log(values);
+      }, 5000);
+    });
   };
 
   return (
@@ -82,6 +89,14 @@ const SignUpPage = () => {
               )}
             </Input>
           </Field>
+          <Button
+            type="submit"
+            style={{ maxWidth: "300px", margin: "0 auto" }}
+            isLoading={isSubmitting}
+            disabled={isSubmitting}
+          >
+            Sign Up
+          </Button>
         </form>
       </div>
     </SignUpPageStyles>
