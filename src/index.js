@@ -1,8 +1,10 @@
 import './styles/index.scss';
+import 'react-toastify/dist/ReactToastify.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import { ThemeProvider } from 'styled-components';
 
 import App from './App';
@@ -17,6 +19,7 @@ root.render(
       <GlobalStyles></GlobalStyles>
       <BrowserRouter>
         <App />
+        <ToastContainer pauseOnHover={false} autoClose={3000} />
       </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>

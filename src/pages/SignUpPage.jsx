@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { addDoc, collection } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import * as yup from 'yup';
 
 import { Button } from '../components/button';
 import { Field } from '../components/field';
 import { IconEyeClose, IconEyeOpen } from '../components/icon';
 import { Input } from '../components/input';
 import { Label } from '../components/label';
+import { auth, db } from '../firebase-app/firebase-config';
 
 const SignUpPageStyles = styled.div`
   min-height: 100vh;
@@ -26,24 +33,49 @@ const SignUpPageStyles = styled.div`
   }
 `;
 
+const schema = yup.object({
+  fullname: yup.string().required("Please enter your fullname!"),
+  email: yup
+    .string()
+    .email("Please enter valid email address!")
+    .required("Please enter your email address!"),
+  password: yup
+    .string()
+    .min(8, "Your password must be at least 8 characters or greater!")
+    .required("Please enter your password!"),
+});
+
 const SignUpPage = () => {
   const [togglePassword, setTogglePassword] = useState(false);
+  const navigate = useNavigate();
 
   const {
     control,
     handleSubmit,
     formState: { errors, isValid, isSubmitting },
-    watch,
-    reset,
-  } = useForm({ mode: "onChange" });
+  } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
-  const handleSignUp = (values) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-        console.log(values);
-      }, 5000);
+  useEffect(() => {
+    const arrErrors = Object.values(errors);
+    if (arrErrors.length > 0) {
+      toast.error(arrErrors[0]?.message);
+    }
+  }, [errors]);
+
+  const handleSignUp = async (values) => {
+    if (!isValid) return;
+    await createUserWithEmailAndPassword(auth, values.email, values.password);
+    await updateProfile(auth.currentUser, {
+      displayName: values.fullname,
     });
+    const colRef = collection(db, "users");
+    await addDoc(colRef, {
+      fullname: values.fullname,
+      email: values.email,
+      password: values.password,
+    });
+    toast.success("Registered successfully 😀");
+    navigate("/");
   };
 
   return (
