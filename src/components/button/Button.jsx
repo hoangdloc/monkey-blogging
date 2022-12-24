@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -27,6 +28,13 @@ const ButtonStyles = styled.button`
   }
 `;
 
+/**
+ * @param {boolean} isLoading Loading state of button
+ * @param {*} onClick Handle click function of button
+ * @param {Node} children React node
+ * @requires
+ * @param {string} type Type of button 'button' | 'submit'
+ */
 const Button = ({
   type = "button",
   children,
@@ -41,6 +49,13 @@ const Button = ({
       {child}
     </ButtonStyles>
   );
+};
+
+Button.propTypes = {
+  type: PropTypes.oneOf(["button", "submit"]),
+  isLoading: PropTypes.bool,
+  onClick: PropTypes.func,
+  children: PropTypes.node,
 };
 
 export default Button;
