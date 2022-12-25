@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { LoadingSpinner } from '../loading';
@@ -20,7 +21,6 @@ const ButtonStyles = styled.button`
   border-radius: 8px;
   font-weight: 600;
   font-size: 18px;
-  width: 100%;
   height: ${(props) => props.height || "66px"};
   &:disabled {
     opacity: 0.5;
@@ -41,8 +41,18 @@ const Button = ({
   onClick = () => {},
   ...props
 }) => {
-  const { isLoading } = props;
+  const { isLoading, to } = props;
   const child = !!isLoading ? <LoadingSpinner /> : children;
+
+  if (to !== "" && typeof to === "string") {
+    return (
+      <NavLink to={to}>
+        <ButtonStyles type={type} {...props}>
+          {child}
+        </ButtonStyles>
+      </NavLink>
+    );
+  }
 
   return (
     <ButtonStyles type={type} onClick={onClick} {...props}>
