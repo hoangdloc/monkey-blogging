@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { LoadingSpinner } from '../loading';
 
@@ -12,12 +12,22 @@ const ButtonStyles = styled.button`
   cursor: pointer;
   padding: 0 25px;
   line-height: 1;
-  color: white;
-  background-image: linear-gradient(
-    to right bottom,
-    ${(props) => props.theme.primary},
-    ${(props) => props.theme.secondary}
-  );
+  ${(props) =>
+    props.kind === "secondary" &&
+    css`
+      background-color: white;
+      color: ${(props) => props.theme.primary};
+    `};
+  ${(props) =>
+    props.kind === "primary" &&
+    css`
+      color: white;
+      background-image: linear-gradient(
+        to right bottom,
+        ${(props) => props.theme.primary},
+        ${(props) => props.theme.secondary}
+      );
+    `};
   border-radius: 8px;
   font-weight: 600;
   font-size: 18px;
@@ -34,9 +44,11 @@ const ButtonStyles = styled.button`
  * @param {Node} children React node
  * @requires
  * @param {string} type Type of button 'button' | 'submit'
+ * @param {string} kind Button color 'primary' | 'secondary'
  */
 const Button = ({
   type = "button",
+  kind = "primary",
   children,
   onClick = () => {},
   ...props
@@ -46,8 +58,8 @@ const Button = ({
 
   if (to !== "" && typeof to === "string") {
     return (
-      <NavLink to={to}>
-        <ButtonStyles type={type} {...props}>
+      <NavLink to={to} style={{ display: "inline-block" }}>
+        <ButtonStyles kind={kind} type={type} {...props}>
           {child}
         </ButtonStyles>
       </NavLink>
@@ -55,7 +67,7 @@ const Button = ({
   }
 
   return (
-    <ButtonStyles type={type} onClick={onClick} {...props}>
+    <ButtonStyles type={type} kind={kind} onClick={onClick} {...props}>
       {child}
     </ButtonStyles>
   );
@@ -66,6 +78,7 @@ Button.propTypes = {
   isLoading: PropTypes.bool,
   onClick: PropTypes.func,
   children: PropTypes.node,
+  kind: PropTypes.oneOf(["primary", "secondary"]),
 };
 
 export default Button;
