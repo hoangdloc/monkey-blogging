@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { addDoc, collection } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -9,8 +9,8 @@ import * as yup from 'yup';
 
 import { Button } from '../components/button';
 import { Field } from '../components/field';
-import { IconEyeClose, IconEyeOpen } from '../components/icon';
 import { Input } from '../components/input';
+import InputPasswordToggle from '../components/input/InputPasswordToggle';
 import { Label } from '../components/label';
 import { auth, db } from '../firebase-app/firebase-config';
 import AuthenticationPage from './AuthenticationPage';
@@ -28,7 +28,6 @@ const schema = yup.object({
 });
 
 const SignUpPage = () => {
-  const [togglePassword, setTogglePassword] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -91,18 +90,7 @@ const SignUpPage = () => {
         </Field>
         <Field>
           <Label htmlFor="password">Password</Label>
-          <Input
-            type={togglePassword ? "text" : "password"}
-            name="password"
-            placeholder="Enter your password"
-            control={control}
-          >
-            {!togglePassword ? (
-              <IconEyeClose onClick={() => setTogglePassword(true)} />
-            ) : (
-              <IconEyeOpen onClick={() => setTogglePassword(false)} />
-            )}
-          </Input>
+          <InputPasswordToggle control={control} />
         </Field>
         <div className="have-account">
           Already have an account? <Link to={"/sign-in"}>Login</Link>
