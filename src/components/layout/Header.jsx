@@ -140,11 +140,11 @@ const Header = () => {
           {!userInfo ? (
             <Button
               type="button"
-              to="/sign-up"
+              to="/sign-in"
               height="56px"
               className="header-button"
             >
-              Sign Up
+              Login
             </Button>
           ) : (
             <div className="header-auth">
