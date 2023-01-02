@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, serverTimestamp, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -24,6 +24,7 @@ const PostAddNew = () => {
   const { userInfo } = useAuth();
   const [categories, setCategories] = useState([]);
   const [selectCategory, setSelectCategory] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { control, watch, setValue, handleSubmit, getValues, reset } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -38,8 +39,13 @@ const PostAddNew = () => {
   const watchStatus = watch("status");
   const watchHot = watch("hot");
   const watchCategory = watch("category");
-  const { image, progress, handleSelectImage, handleDeleteImage } =
-    useFirebaseImage(setValue, getValues);
+  const {
+    image,
+    progress,
+    handleSelectImage,
+    handleDeleteImage,
+    handleResetUpload,
+  } = useFirebaseImage(setValue, getValues);
 
   useEffect(() => {
     const getData = async () => {
@@ -58,30 +64,42 @@ const PostAddNew = () => {
     getData();
   }, []);
 
-  const addPostHandler = async (values) => {
-    const cloneValues = { ...values };
-    cloneValues.slug = slugify(cloneValues.slug || cloneValues.title, {
-      lower: true,
-      strict: true,
-    });
-    cloneValues.status = Number(cloneValues.status);
+  useEffect(() => {
+    document.title = "Monkey Blogging - Add new post";
+  }, []);
 
-    const colRef = collection(db, "posts");
-    await addDoc(colRef, {
-      ...cloneValues,
-      image,
-      userId: userInfo.uid,
-    });
-    reset({
-      title: "",
-      slug: "",
-      status: 2,
-      categoryId: "",
-      hot: false,
-      image: "",
-    });
-    setSelectCategory(null);
-    toast.success("Created successfully 😀");
+  const addPostHandler = async (values) => {
+    setLoading(true);
+    try {
+      const cloneValues = { ...values };
+      cloneValues.slug = slugify(cloneValues.slug || cloneValues.title, {
+        lower: true,
+      });
+      cloneValues.status = Number(cloneValues.status);
+
+      const colRef = collection(db, "posts");
+      await addDoc(colRef, {
+        ...cloneValues,
+        image,
+        userId: userInfo.uid,
+        createdAt: serverTimestamp(),
+      });
+      reset({
+        title: "",
+        slug: "",
+        status: 2,
+        categoryId: "",
+        hot: false,
+        image: "",
+      });
+      handleResetUpload();
+      setSelectCategory(null);
+      toast.success("Created successfully 😀");
+    } catch (error) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClickOption = (item) => {
@@ -187,7 +205,12 @@ const PostAddNew = () => {
             </div>
           </Field>
         </div>
-        <Button type="submit" className="mx-auto">
+        <Button
+          type="submit"
+          className="mx-auto w-[250px]"
+          isLoading={loading}
+          disabled={loading}
+        >
           Add new post
         </Button>
       </form>

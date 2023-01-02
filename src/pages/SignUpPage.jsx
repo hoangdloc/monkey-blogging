@@ -1,10 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { addDoc, collection } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import slugify from 'slugify';
 import * as yup from 'yup';
 
 import { Button } from '../components/button';
@@ -53,11 +54,11 @@ const SignUpPage = () => {
     await updateProfile(auth.currentUser, {
       displayName: values.fullname,
     });
-    const colRef = collection(db, "users");
-    await addDoc(colRef, {
+    await setDoc(doc(db, "users", auth.currentUser.uid), {
       fullname: values.fullname,
       email: values.email,
       password: values.password,
+      username: slugify(values.fullname, { lower: true }),
     });
     toast.success("Registered successfully 😀");
     navigate("/");

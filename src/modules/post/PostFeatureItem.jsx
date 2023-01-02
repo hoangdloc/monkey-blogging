@@ -1,6 +1,9 @@
-import React from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import slugify from 'slugify';
 import styled from 'styled-components';
 
+import { db } from '../../firebase-app/firebase-config';
 import PostCategory from './PostCategory';
 import PostImage from './PostImage';
 import PostMeta from './PostMeta';
@@ -50,21 +53,54 @@ const PostFeatureItemStyles = styled.div`
     }
   }
 `;
-const PostFeatureItem = () => {
+const PostFeatureItem = ({ data }) => {
+  const [category, setCategory] = useState(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    async function fetch() {
+      const docRef = doc(db, "categories", data.categoryId);
+      const docSnap = await getDoc(docRef);
+      setCategory(docSnap.data());
+    }
+    fetch();
+  }, [data.categoryId]);
+
+  useEffect(() => {
+    async function fetchUser() {
+      if (data.userId) {
+        const docRef = doc(db, "users", data.userId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.data()) {
+          setUser(docSnap.data());
+        }
+      }
+    }
+    fetchUser();
+  }, [data.userId]);
+
+  if (!data || !data.id) return null;
+
+  const date = new Date(data?.createdAt?.seconds * 1000);
+  const formatDate = new Date(date).toLocaleDateString("vi-VI");
+
   return (
     <PostFeatureItemStyles>
-      <PostImage
-        url="https://images.unsplash.com/photo-1614624532983-4ce03382d63d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2662&q=80"
-        alt="unsplash"
-      />
+      <PostImage url={data.image} />
       <div className="post-overlay"></div>
       <div className="post-content">
         <div className="post-top">
-          <PostCategory>Kiến thức</PostCategory>
-          <PostMeta />
+          {category?.name && (
+            <PostCategory to={category.slug}>{category.name}</PostCategory>
+          )}
+          <PostMeta
+            to={slugify(user?.fullname || "", { lower: true })}
+            authorName={user?.fullname}
+            date={formatDate}
+          />
         </div>
-        <PostTitle size="big">
-          Hướng dẫn setup phòng cực chill dành cho người mới toàn tập
+        <PostTitle to={data.slug} size="big">
+          {data.title}
         </PostTitle>
       </div>
     </PostFeatureItemStyles>
