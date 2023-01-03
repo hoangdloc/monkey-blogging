@@ -10,6 +10,9 @@ const FieldStyles = styled.div`
   &:last-child {
     margin-bottom: 0;
   }
+  @media screen and (max-width: 1023.98px) {
+    margin-bottom: 20px;
+  }
 `;
 
 const Field = ({ children }) => {
