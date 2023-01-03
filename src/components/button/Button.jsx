@@ -32,6 +32,12 @@ const ButtonStyles = styled.button`
   font-weight: 600;
   font-size: 18px;
   height: ${(props) => props.height || "66px"};
+  ${(props) =>
+    props.kind === "ghost" &&
+    css`
+      color: ${(props) => props.theme.primary};
+      background-color: rgba(29, 192, 113, 0.1);
+    `};
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;

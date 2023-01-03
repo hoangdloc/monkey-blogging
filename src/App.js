@@ -6,7 +6,7 @@ import PostAddNew from './modules/post/PostAddNew';
 import PostManage from './modules/post/PostManage';
 import DashboardPage from './pages/DashboardPage';
 import HomePage from './pages/HomePage';
-import NotFoundPage from './pages/NotFoundPage';
+import PageNotFound from './pages/PageNotFound';
 import PostDetailsPage from './pages/PostDetailsPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
@@ -20,7 +20,7 @@ function App() {
           <Route path="/sign-up" element={<SignUpPage />} />
           <Route path="/sign-in" element={<SignInPage />} />
 
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="*" element={<PageNotFound />} />
           <Route path="/:slug" element={<PostDetailsPage />} />
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
