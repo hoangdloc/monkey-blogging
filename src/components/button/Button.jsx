@@ -30,7 +30,7 @@ const ButtonStyles = styled.button`
     `};
   border-radius: 8px;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
   height: ${(props) => props.height || "66px"};
   ${(props) =>
     props.kind === "ghost" &&

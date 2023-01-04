@@ -2,10 +2,12 @@ import { Route, Routes } from 'react-router-dom';
 
 import { AuthProvider } from './contexts/auth-context';
 import CategoryAddNew from './modules/category/CategoryAddNew';
+import CategoryManage from './modules/category/CategoryManage';
 import DashboardLayout from './modules/dashboard/DashboardLayout';
 import PostAddNew from './modules/post/PostAddNew';
 import PostManage from './modules/post/PostManage';
 import UserAddNew from './modules/user/UserAddNew';
+import UserManage from './modules/user/UserManage';
 import UserProfile from './modules/user/UserProfile';
 import DashboardPage from './pages/DashboardPage';
 import HomePage from './pages/HomePage';
@@ -27,9 +29,11 @@ function App() {
           <Route path="/:slug" element={<PostDetailsPage />} />
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/manage/post" element={<PostManage />} />
+            <Route path="/manage/posts" element={<PostManage />} />
             <Route path="/manage/add-post" element={<PostAddNew />} />
+            <Route path="/manage/category" element={<CategoryManage />} />
             <Route path="/manage/add-category" element={<CategoryAddNew />} />
+            <Route path="/manage/user" element={<UserManage />} />
             <Route path="/manage/add-user" element={<UserAddNew />} />
             <Route path="/profile" element={<UserProfile />} />
           </Route>
