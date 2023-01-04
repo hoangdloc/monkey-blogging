@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './contexts/auth-context';
 import CategoryAddNew from './modules/category/CategoryAddNew';
 import CategoryManage from './modules/category/CategoryManage';
+import CategoryUpdate from './modules/category/CategoryUpdate';
 import DashboardLayout from './modules/dashboard/DashboardLayout';
 import PostAddNew from './modules/post/PostAddNew';
 import PostManage from './modules/post/PostManage';
@@ -33,6 +34,10 @@ function App() {
             <Route path="/manage/add-post" element={<PostAddNew />} />
             <Route path="/manage/category" element={<CategoryManage />} />
             <Route path="/manage/add-category" element={<CategoryAddNew />} />
+            <Route
+              path="/manage/update-category"
+              element={<CategoryUpdate />}
+            />
             <Route path="/manage/user" element={<UserManage />} />
             <Route path="/manage/add-user" element={<UserAddNew />} />
             <Route path="/profile" element={<UserProfile />} />
