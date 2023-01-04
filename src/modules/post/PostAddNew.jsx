@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { Button } from '../../components/button';
 import { Radio } from '../../components/checkbox';
 import { Dropdown } from '../../components/dropdown';
-import { Field } from '../../components/field';
+import { Field, FieldCheckboxes } from '../../components/field';
 import ImageUpload from '../../components/image/ImageUpload';
 import { Input } from '../../components/input';
 import { Label } from '../../components/label';
@@ -17,6 +17,7 @@ import { useAuth } from '../../contexts/auth-context';
 import { db } from '../../firebase-app/firebase-config';
 import useFirebaseImage from '../../hooks/useFirebaseImage';
 import { postStatus } from '../../utils/constants';
+import DashboardHeading from '../dashboard/DashboardHeading';
 
 const PostAddNewStyles = styled.div``;
 
@@ -109,7 +110,7 @@ const PostAddNew = () => {
 
   return (
     <PostAddNewStyles>
-      <h1 className="dashboard-heading">Add new post</h1>
+      <DashboardHeading title="Add post" desc="Add new post" />
       <form onSubmit={handleSubmit(addPostHandler)}>
         <div className="form-layout">
           <Field>
@@ -177,7 +178,7 @@ const PostAddNew = () => {
           </Field>
           <Field>
             <Label>Status</Label>
-            <div className="flex flex-wrap items-center gap-x-5">
+            <FieldCheckboxes>
               <Radio
                 name="status"
                 control={control}
@@ -202,7 +203,7 @@ const PostAddNew = () => {
               >
                 Reject
               </Radio>
-            </div>
+            </FieldCheckboxes>
           </Field>
         </div>
         <Button

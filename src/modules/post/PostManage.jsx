@@ -4,12 +4,12 @@ import { Button } from '../../components/button';
 import { Dropdown } from '../../components/dropdown';
 import { Pagination } from '../../components/pagination';
 import { Table } from '../../components/table';
+import DashboardHeading from '../dashboard/DashboardHeading';
 
 const PostManage = () => {
   return (
     <div>
-      <h1 className="dashboard-heading">Manage post</h1>
-      <p className="dashboard-short-desc">Manage all posts</p>
+      <DashboardHeading title="All posts" desc="Manage all posts" />
       <div className="flex justify-end gap-5 mb-10">
         <div className="w-full max-w-[200px]">
           <Dropdown>

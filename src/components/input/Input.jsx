@@ -38,6 +38,13 @@ const InputStyles = styled.div`
   }
 `;
 
+/**
+ *
+ * @param {*} placeholder(optional) - Placeholder of input
+ * @param {*} name(optional) - name of input
+ * @param {*} control - control from react hook form
+ * @returns Input
+ */
 const Input = ({ name = "", type = "text", children, control, ...props }) => {
   const { field } = useController({
     control,
