@@ -12,6 +12,7 @@ const UserProfile = () => {
   const { control } = useForm({
     mode: "onChange",
   });
+
   return (
     <div>
       <DashboardHeading

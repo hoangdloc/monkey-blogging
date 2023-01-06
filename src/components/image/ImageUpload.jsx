@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 
 const ImageUpload = (props) => {
@@ -9,6 +10,7 @@ const ImageUpload = (props) => {
     handleDeleteImage = () => {},
     ...rest
   } = props;
+
   return (
     <label
       className={`cursor-pointer flex items-center justify-center border border-dashed w-full min-h-[200px] rounded-lg ${className} relative overflow-hidden group`}
@@ -68,6 +70,13 @@ const ImageUpload = (props) => {
       )}
     </label>
   );
+};
+
+ImageUpload.propTypes = {
+  name: PropTypes.string,
+  className: PropTypes.string,
+  progress: PropTypes.number,
+  image: PropTypes.string,
 };
 
 export default ImageUpload;

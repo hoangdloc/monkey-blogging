@@ -1,4 +1,11 @@
-import { addDoc, collection, getDocs, query, serverTimestamp, where } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  serverTimestamp,
+  where
+} from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -39,7 +46,6 @@ const PostAddNew = () => {
   });
   const watchStatus = watch("status");
   const watchHot = watch("hot");
-  const watchCategory = watch("category");
   const {
     image,
     progress,
@@ -163,10 +169,6 @@ const PostAddNew = () => {
               </span>
             )}
           </Field>
-          {/* <Field>
-            <Label>Author</Label>
-            <Input control={control} placeholder="Find the author" />
-          </Field> */}
         </div>
         <div className="form-layout">
           <Field>

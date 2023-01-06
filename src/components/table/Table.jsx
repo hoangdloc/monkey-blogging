@@ -22,6 +22,7 @@ const TableStyles = styled.div`
   }
   td {
     padding: 15px 30px;
+    white-space: nowrap;
   }
   tbody {
   }

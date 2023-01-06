@@ -10,6 +10,7 @@ import PostManage from './modules/post/PostManage';
 import UserAddNew from './modules/user/UserAddNew';
 import UserManage from './modules/user/UserManage';
 import UserProfile from './modules/user/UserProfile';
+import UserUpdate from './modules/user/UserUpdate';
 import DashboardPage from './pages/DashboardPage';
 import HomePage from './pages/HomePage';
 import PageNotFound from './pages/PageNotFound';
@@ -40,6 +41,7 @@ function App() {
             />
             <Route path="/manage/user" element={<UserManage />} />
             <Route path="/manage/add-user" element={<UserAddNew />} />
+            <Route path="/manage/update-user" element={<UserUpdate />} />
             <Route path="/profile" element={<UserProfile />} />
           </Route>
         </Routes>
