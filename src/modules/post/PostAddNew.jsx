@@ -12,7 +12,6 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import slugify from 'slugify';
-import styled from 'styled-components';
 
 import { Button } from '../../components/button';
 import { Radio } from '../../components/checkbox';
@@ -27,8 +26,6 @@ import { db } from '../../firebase-app/firebase-config';
 import useFirebaseImage from '../../hooks/useFirebaseImage';
 import { postStatus } from '../../utils/constants';
 import DashboardHeading from '../dashboard/DashboardHeading';
-
-const PostAddNewStyles = styled.div``;
 
 const PostAddNew = () => {
   const { userInfo } = useAuth();
@@ -137,11 +134,11 @@ const PostAddNew = () => {
       id: docData.id,
       ...docData.data(),
     });
-    setSelectCategory(item.name);
+    setSelectCategory(item);
   };
 
   return (
-    <PostAddNewStyles>
+    <>
       <DashboardHeading title="Add post" desc="Add new post" />
       <form onSubmit={handleSubmit(addPostHandler)}>
         <div className="form-layout">
@@ -189,9 +186,9 @@ const PostAddNew = () => {
                   ))}
               </Dropdown.List>
             </Dropdown>
-            {selectCategory && (
+            {selectCategory?.name && (
               <span className="inline-block p-3 text-sm font-medium text-green-600 bg-green-100 rounded-lg">
-                {selectCategory}
+                {selectCategory?.name}
               </span>
             )}
           </Field>
@@ -243,7 +240,7 @@ const PostAddNew = () => {
           Add new post
         </Button>
       </form>
-    </PostAddNewStyles>
+    </>
   );
 };
 

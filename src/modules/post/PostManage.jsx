@@ -9,6 +9,7 @@ import {
   startAfter,
   where
 } from 'firebase/firestore';
+import { debounce } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -28,6 +29,7 @@ const PostManage = () => {
   const [postList, setPostList] = useState([]);
   const [filter, setFilter] = useState("");
   const [lastDoc, setLastDoc] = useState(null);
+  const [total, setTotal] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,6 +45,9 @@ const PostManage = () => {
       const documentSnapshots = await getDocs(newRef);
       const lastVisible =
         documentSnapshots.docs[documentSnapshots.docs.length - 1];
+      onSnapshot(colRef, (snapshot) => {
+        setTotal(snapshot.size);
+      });
       onSnapshot(newRef, (snapshot) => {
         let results = [];
         snapshot.forEach((doc) => {
@@ -57,6 +62,10 @@ const PostManage = () => {
     }
     fetchData();
   }, [filter]);
+
+  const handleSearchPost = debounce((e) => {
+    setFilter(e.target.value);
+  }, 250);
 
   const handleDeletePost = async (postId) => {
     const docRef = doc(db, "posts", postId);
@@ -125,6 +134,7 @@ const PostManage = () => {
             type="text"
             className="w-full p-4 border border-gray-300 border-solid rounded-lg"
             placeholder="Search post..."
+            onChange={handleSearchPost}
           />
         </div>
       </div>
@@ -177,7 +187,11 @@ const PostManage = () => {
                 <td>
                   <div className="flex items-center text-gray-500 gap-x-3">
                     <ActionView onClick={() => navigate(`/${post.slug}`)} />
-                    <ActionEdit />
+                    <ActionEdit
+                      onClick={() =>
+                        navigate(`/manage/update-post?id=${post.id}`)
+                      }
+                    />
                     <ActionDelete onClick={() => handleDeletePost(post.id)} />
                   </div>
                 </td>
@@ -185,15 +199,17 @@ const PostManage = () => {
             ))}
         </tbody>
       </Table>
-      <div className="mt-10 text-center">
-        <Button
-          onClick={handleLoadMorePosts}
-          kind="ghost"
-          className="mx-auto w-[200px]"
-        >
-          Load more+
-        </Button>
-      </div>
+      {total > postList.length && (
+        <div className="mt-10 text-center">
+          <Button
+            onClick={handleLoadMorePosts}
+            kind="ghost"
+            className="mx-auto w-[200px]"
+          >
+            Load more+
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
