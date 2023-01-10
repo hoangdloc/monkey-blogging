@@ -1,4 +1,5 @@
 import React from 'react';
+import slugify from 'slugify';
 import styled from 'styled-components';
 
 import PostCategory from './PostCategory';
@@ -28,18 +29,24 @@ const PostNewestLargeStyles = styled.div`
   }
 `;
 
-const PostNewestLarge = () => {
+const PostNewestLarge = ({ data }) => {
+  if (!data.id) return null;
+
+  const date = new Date(data?.createdAt?.seconds * 1000);
+  const formatDate = new Date(date).toLocaleDateString("vi-VI");
+
   return (
     <PostNewestLargeStyles>
-      <PostImage
-        url="https://images.unsplash.com/photo-1614624532983-4ce03382d63d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2662&q=80"
-        alt="unsplash"
-      />
-      <PostCategory>Knowledge</PostCategory>
-      <PostTitle size="big">
-        The complete guide to learn new languages for beginners
+      <PostImage url={data.image} alt="unsplash" to={data.slug} />
+      <PostCategory to={data.category.slug}>{data.category.name}</PostCategory>
+      <PostTitle to={data.slug} size="big">
+        {data.title}
       </PostTitle>
-      <PostMeta />
+      <PostMeta
+        to={slugify(data.user.username || "", { lower: true })}
+        authorName={data.user.fullname}
+        date={formatDate}
+      />
     </PostNewestLargeStyles>
   );
 };

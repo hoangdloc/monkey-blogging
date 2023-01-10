@@ -2,15 +2,16 @@ import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import parse from 'html-react-parser';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import slugify from 'slugify';
 import styled from 'styled-components';
 
-import Heading from '../components/layout/Heading';
+import AuthorBox from '../components/author/AuthorBox';
 import Layout from '../components/layout/Layout';
 import { db } from '../firebase-app/firebase-config';
 import PostCategory from '../modules/post/PostCategory';
 import PostImage from '../modules/post/PostImage';
-import PostItem from '../modules/post/PostItem';
 import PostMeta from '../modules/post/PostMeta';
+import PostRelated from '../modules/post/PostRelated';
 import PageNotFound from './PageNotFound';
 
 const PostDetailsPageStyles = styled.div`
@@ -105,6 +106,10 @@ const PostDetailsPage = () => {
   const [postInfo, setPostInfo] = useState({});
 
   useEffect(() => {
+    document.body.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [slug]);
+
+  useEffect(() => {
     async function fetchData() {
       if (!slug) return;
       const colRef = query(collection(db, "posts"), where("slug", "==", slug));
@@ -121,6 +126,8 @@ const PostDetailsPage = () => {
   if (!postInfo.title) return null;
 
   const { user } = postInfo;
+  const date = new Date(postInfo?.createdAt?.seconds * 1000);
+  const formatDate = new Date(date).toLocaleDateString("vi-VI");
 
   return (
     <PostDetailsPageStyles>
@@ -129,36 +136,22 @@ const PostDetailsPage = () => {
           <div className="post-header">
             <PostImage url={postInfo.image} className="post-feature" />
             <div className="post-info">
-              <PostCategory className="mb-6">
+              <PostCategory className="mb-6" to={postInfo.category.slug}>
                 {postInfo.category.name}
               </PostCategory>
               <h1 className="post-heading">{postInfo.title}</h1>
-              <PostMeta />
+              <PostMeta
+                to={slugify(postInfo.user.username || "", { lower: true })}
+                authorName={postInfo.user.fullname}
+                date={formatDate}
+              />
             </div>
           </div>
           <div className="post-content">
             <div className="entry-content">{parse(postInfo.content)}</div>
-            <div className="author">
-              <div className="author-image">
-                <img src={user.avatar} alt="Author Avatar" />
-              </div>
-              <div className="author-content">
-                <h3 className="author-name">{user.fullname}</h3>
-                <p className="author-desc">
-                  {user?.description || "No description yet"}
-                </p>
-              </div>
-            </div>
+            <AuthorBox userId={user.id} />
           </div>
-          <div className="post-related">
-            <Heading>Bài viết liên quan</Heading>
-            <div className="grid-layout grid-layout--primary">
-              <PostItem />
-              <PostItem />
-              <PostItem />
-              <PostItem />
-            </div>
-          </div>
+          <PostRelated categoryId={postInfo.category.id} />
         </div>
       </Layout>
     </PostDetailsPageStyles>

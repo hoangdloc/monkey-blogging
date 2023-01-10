@@ -19,8 +19,9 @@ import { Button } from '../../components/button';
 import { Dropdown } from '../../components/dropdown';
 import { LabelStatus } from '../../components/label';
 import { Table } from '../../components/table';
+import { useAuth } from '../../contexts/auth-context';
 import { db } from '../../firebase-app/firebase-config';
-import { postStatus } from '../../utils/constants';
+import { postStatus, userRole } from '../../utils/constants';
 import DashboardHeading from '../dashboard/DashboardHeading';
 
 const POST_PER_PAGE = 5;
@@ -119,6 +120,9 @@ const PostManage = () => {
         break;
     }
   };
+
+  const { userInfo } = useAuth();
+  if (userInfo.role !== userRole.ADMIN) return null;
 
   return (
     <div>

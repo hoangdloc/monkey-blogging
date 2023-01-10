@@ -12,6 +12,7 @@ import { Field, FieldCheckboxes } from '../../components/field';
 import ImageUpload from '../../components/image/ImageUpload';
 import { Input } from '../../components/input';
 import { Label } from '../../components/label';
+import Textarea from '../../components/textarea/Textarea';
 import { db } from '../../firebase-app/firebase-config';
 import useFirebaseImage from '../../hooks/useFirebaseImage';
 import { userRole, userStatus } from '../../utils/constants';
@@ -37,6 +38,7 @@ const schema = yup.object({
     .number()
     .required("Please select user role!")
     .oneOf([userRole.ADMIN, userRole.MOD, userRole.USER]),
+  description: yup.string(),
 });
 
 const UserUpdate = () => {
@@ -216,6 +218,16 @@ const UserUpdate = () => {
                 User
               </Radio>
             </FieldCheckboxes>
+          </Field>
+        </div>
+        <div className="form-layout">
+          <Field>
+            <Label>Description</Label>
+            <Textarea
+              name="description"
+              placeholder="Something about you..."
+              control={control}
+            />
           </Field>
         </div>
         <Button

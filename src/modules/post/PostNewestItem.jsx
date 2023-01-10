@@ -1,4 +1,5 @@
 import React from 'react';
+import slugify from 'slugify';
 import styled from 'styled-components';
 
 import PostCategory from './PostCategory';
@@ -47,20 +48,25 @@ const PostNewestItemStyles = styled.div`
     }
   }
 `;
-const PostNewestItem = () => {
+const PostNewestItem = ({ data }) => {
+  if (!data.id) return null;
+
+  const date = new Date(data?.createdAt?.seconds * 1000);
+  const formatDate = new Date(date).toLocaleDateString("vi-VI");
+
   return (
     <PostNewestItemStyles>
-      <PostImage
-        url="https://images.unsplash.com/photo-1614624532983-4ce03382d63d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2662&q=80"
-        alt="unsplash"
-        to="/"
-      />
+      <PostImage url={data.image} alt="unsplash" to={data.slug} />
       <div className="post-content">
-        <PostCategory type="secondary">Knowledge</PostCategory>
-        <PostTitle>
-          The complete guide to learn new languages for beginners
-        </PostTitle>
-        <PostMeta />
+        <PostCategory to={data.category.slug} type="secondary">
+          {data.category.name}
+        </PostCategory>
+        <PostTitle to={data.slug}>{data.title}</PostTitle>
+        <PostMeta
+          to={slugify(data.user.username || "", { lower: true })}
+          authorName={data.user.fullname}
+          date={formatDate}
+        />
       </div>
     </PostNewestItemStyles>
   );

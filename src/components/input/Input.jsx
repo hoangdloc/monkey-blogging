@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { useController } from 'react-hook-form';
 import styled from 'styled-components';
@@ -9,7 +10,7 @@ const InputStyles = styled.div`
   input {
     width: 100%;
     padding: ${(props) =>
-      props.hasIcon ? "15px 60px 15px 25px" : "15px 25px"};
+      props.hasIcon ? "16px 60px 16px 20px" : "16px 20px"};
     background-color: transparent;
     border: 1px solid ${(props) => props.theme.grayf1};
     border-radius: 8px;
@@ -56,6 +57,13 @@ const Input = ({ name = "", type = "text", children, control, ...props }) => {
       {children ? <div className="input-icon">{children}</div> : null}
     </InputStyles>
   );
+};
+
+Input.propTypes = {
+  name: PropTypes.string.isRequired,
+  type: PropTypes.string,
+  children: PropTypes.node,
+  control: PropTypes.any.isRequired,
 };
 
 export default Input;
